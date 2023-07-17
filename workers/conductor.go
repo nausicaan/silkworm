@@ -8,7 +8,10 @@ import (
 	"strings"
 )
 
-var content []byte
+var (
+	hd, _ = os.UserHomeDir()
+	local = hd + "/Documents/github/silkworm/"
+)
 
 // Quarterback is in charge of directing the program
 func Quarterback() {
@@ -18,7 +21,7 @@ func Quarterback() {
 
 func jsoner() {
 	// Read the JSON file
-	data, err := os.ReadFile("defaults/vars.json")
+	data, err := os.ReadFile(local + "defaults/vars.json")
 	inspect(err)
 
 	// Unmarshal the JSON data into the struct
@@ -51,7 +54,7 @@ func sorter(repo, label string) {
 		finder(filter.ACF, "/Changelog"+filter.CLH1)
 	default:
 		finder(filter.WordPress+label+"/", "/Changelog"+filter.CLH2)
-		content = capture("sed", "1d", grepped)
+		content = capture("sed", "1d", local+grepped)
 	}
 }
 
@@ -63,21 +66,21 @@ func premium(label string) {
 		finder(filter.Cal+string(v)+"/", "/"+version+filter.CLH2)
 	case "gravityforms":
 		finder(filter.Gravity, filter.OPH3+version+filter.End)
-		content = capture("sed", "1,4d", grepped)
+		content = capture("sed", "1,4d", local+grepped)
 	case "polylang-pro":
 		finder(filter.Poly, filter.OPH4+version+filter.End)
 	case "event-tickets-plus":
 		finder(filter.Tickets+string(v)+"/", "/"+version+filter.Special)
 	case "wp-all-export-pro":
 		finder(filter.WPExport, "/"+version+filter.CLH4)
-		content = capture("sed", "${/h3./d;}", grepped)
+		content = capture("sed", "${/h3./d;}", local+grepped)
 	}
 }
 
 // Find and replace/delete html tags
 func finder(link, filter string) {
-	execute("curl", "-s", link, "-o", scraped)
-	grep := capture("sed", "-n", filter, scraped)
+	execute("curl", "-s", link, "-o", local+scraped)
+	grep := capture("sed", "-n", filter, local+scraped)
 	for _, v := range deletions {
 		r := bytes.ReplaceAll(grep, []byte(v), []byte(""))
 		grep = r
@@ -86,7 +89,7 @@ func finder(link, filter string) {
 		r := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
 		grep = r
 	}
-	scribe(grepped, grep)
-	content = capture("sed", "/^$/d", grepped)
-	scribe(grepped, content)
+	scribe(local+grepped, grep)
+	content = capture("sed", "/^$/d", local+grepped)
+	scribe(local+grepped, content)
 }

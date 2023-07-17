@@ -12,6 +12,7 @@
 *.out
 
 # Directories
+bin/
 defaults/
 temp/
 test/

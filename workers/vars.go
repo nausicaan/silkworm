@@ -40,6 +40,7 @@ var (
 		{"<em>", "**"},
 		{"</em>", "**"},
 	}
+	content  []byte
 	versions = [1][2]string{{".", "-"}}
 	filter   Filters
 	version  string
