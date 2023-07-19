@@ -2,7 +2,7 @@
 
 Silkworm is a WordPress plugin update ticket creation tool. It's meant to bridge the gap between [Platypus](https://github.com/nausicaan/platypus.git) and [Bowerbird](https://github.com/nausicaan/bowerbird.git), reading the output from *Platypus* and triggering *Bowerbird* with information recieved and tickets created.
 
-![Silkworm](worm.webp)
+![Silkworm](cocoons.webp)
 
 ## Prerequisite
 
