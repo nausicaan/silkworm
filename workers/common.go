@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func scribe(name string, d []byte) {
+func document(name string, d []byte) {
 	inspect(os.WriteFile(name, d, 0666))
 }
 

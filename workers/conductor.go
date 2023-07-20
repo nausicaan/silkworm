@@ -49,11 +49,12 @@ func sorter(repo, label string) {
 	case "bcgov-plugin":
 		premium(label)
 	case "freemius":
-		finder(filter.WordPress+label+"/", "/Changelog"+filter.Spotlight)
+		finder(filter.WordPress+"spotlight-social-photo-feeds/#developers", "/Changelog"+filter.Spotlight)
+		content = capture("sed", "1d", local+grepped)
 	case "wpengine":
 		finder(filter.ACF, "/Changelog"+filter.CLH1)
 	default:
-		finder(filter.WordPress+label+"/", "/Changelog"+filter.CLH2)
+		finder(filter.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
 		content = capture("sed", "1d", local+grepped)
 	}
 }
@@ -89,7 +90,7 @@ func finder(link, filter string) {
 		r := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
 		grep = r
 	}
-	scribe(local+grepped, grep)
+	document(local+grepped, grep)
 	content = capture("sed", "/^$/d", local+grepped)
-	scribe(local+grepped, content)
+	document(local+grepped, content)
 }
