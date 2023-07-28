@@ -23,6 +23,33 @@ type Filters struct {
 	Spotlight string `json:"spotlight"`
 }
 
+// Post contains the JSON parameters for a new Jira ticket
+type Post struct {
+	Issues []struct {
+		Fields struct {
+			Assignee struct {
+				Key string `json:"key"`
+			} `json:"assignee"`
+			Issuetype struct {
+				ID string `json:"id"`
+			} `json:"issuetype"`
+			Creator struct {
+				Key string `json:"key"`
+			} `json:"creator"`
+			Labels   []string `json:"labels"`
+			Reporter struct {
+				Key string `json:"key"`
+			} `json:"reporter"`
+			Project struct {
+				ID  string `json:"id"`
+				Key string `json:"key"`
+			} `json:"project"`
+			Description string `json:"description"`
+			Summary     string `json:"summary"`
+		} `json:"fields"`
+	} `json:"issues"`
+}
+
 const (
 	scraped, grepped, header string = "temp/scrape.txt", "temp/grep.txt", "h2. Changelog\n"
 )
@@ -40,8 +67,9 @@ var (
 		{"<em>", "**"},
 		{"</em>", "**"},
 	}
-	content  []byte
 	versions = [1][2]string{{".", "-"}}
-	filter   Filters
+	content  []byte
 	version  string
+	filter   Filters
+	post     Post
 )
