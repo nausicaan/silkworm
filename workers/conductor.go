@@ -15,17 +15,20 @@ var (
 
 // Quarterback is in charge of directing the program
 func Quarterback() {
-	jsoner()
+	jsoner("defaults/body.json")
+	jsoner("defaults/vars.json")
 	sifter()
 }
 
-func jsoner() {
-	// Read the JSON file
-	data, err := os.ReadFile(local + "defaults/vars.json")
+// Read the vars.json file and Unmarshal the data into a go structure
+func jsoner(target string) {
+	data, err := os.ReadFile(local + target)
 	inspect(err)
-
-	// Unmarshal the JSON data into the struct
-	json.Unmarshal([]byte(data), &filter)
+	if strings.Contains(target, "body") {
+		json.Unmarshal([]byte(data), &post)
+	} else {
+		json.Unmarshal([]byte(data), &filter)
+	}
 }
 
 // Iterate through the Args array and assign plugin and ticket values
@@ -36,10 +39,16 @@ func sifter() {
 		secondsplit := strings.Split(firstsplit[1], ":")
 		label := secondsplit[0]
 		version = secondsplit[1]
+
 		sorter(repo, label)
-		description := append([]byte("h2. Changelog\n"), content...)
-		/* TODO Create Jira ticket using description */
-		fmt.Println(string(description))
+
+		changelog := append([]byte("h2. Changelog\n"), content...)
+
+		/* TODO Create Jira ticket using Description & Summary */
+		post.Issues[0].Fields.Description = os.Args[1]
+		post.Issues[0].Fields.Summary = string(changelog)
+
+		fmt.Println(string(changelog))
 	}
 }
 
@@ -67,7 +76,6 @@ func premium(label string) {
 		finder(filter.Cal+string(v)+"/", "/"+version+filter.CLH2)
 	case "gravityforms":
 		finder(filter.Gravity, filter.OPH3+version+filter.End)
-		content = capture("sed", "1,4d", local+grepped)
 	case "polylang-pro":
 		finder(filter.Poly, filter.OPH4+version+filter.End)
 	case "event-tickets-plus":
