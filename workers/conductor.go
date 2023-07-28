@@ -4,14 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 )
 
-var (
-	hd, _ = os.UserHomeDir()
-	local = hd + "/Documents/github/silkworm/"
-)
+var hd, _ = os.UserHomeDir()
 
 // Quarterback is in charge of directing the program
 func Quarterback() {
@@ -20,12 +18,13 @@ func Quarterback() {
 	sifter()
 }
 
-// Read the vars.json file and Unmarshal the data into a go structure
+// Read the passed JSON file and Unmarshal the data into a go structure
 func jsoner(target string) {
 	data, err := os.ReadFile(local + target)
 	inspect(err)
 	if strings.Contains(target, "body") {
 		json.Unmarshal([]byte(data), &post)
+		body = data
 	} else {
 		json.Unmarshal([]byte(data), &filter)
 	}
@@ -45,14 +44,13 @@ func sifter() {
 		changelog := append([]byte("h2. Changelog\n"), content...)
 
 		/* TODO Create Jira ticket using Description & Summary */
-		post.Issues[0].Fields.Description = os.Args[1]
-		post.Issues[0].Fields.Summary = string(changelog)
+		// jira(changelog)
 
 		fmt.Println(string(changelog))
 	}
 }
 
-// Sort the query based on the repo name
+// Sort the query based on repository name
 func sorter(repo, label string) {
 	switch repo {
 	case "bcgov-plugin":
@@ -91,14 +89,38 @@ func finder(link, filter string) {
 	execute("curl", "-s", link, "-o", local+scraped)
 	grep := capture("sed", "-n", filter, local+scraped)
 	for _, v := range deletions {
-		r := bytes.ReplaceAll(grep, []byte(v), []byte(""))
-		grep = r
+		replace := bytes.ReplaceAll(grep, []byte(v), []byte(""))
+		grep = replace
 	}
 	for i := 0; i < len(replacements); i++ {
-		r := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
-		grep = r
+		replace := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
+		grep = replace
 	}
 	document(local+grepped, grep)
 	content = capture("sed", "/^$/d", local+grepped)
 	document(local+grepped, content)
+}
+
+func jira(changelog []byte) {
+	posturl := filter.API
+	request, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
+	inspect(err)
+
+	request.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	inspect(err)
+
+	defer response.Body.Close()
+
+	post.Issues[0].Fields.Description = os.Args[1]
+	post.Issues[0].Fields.Summary = string(changelog)
+
+	// derr := json.NewDecoder(response.Body).Decode(post)
+	// inspect(derr)
+
+	if response.StatusCode != http.StatusCreated {
+		panic(response.Status)
+	}
 }
