@@ -14,6 +14,7 @@ type Filters struct {
 	Cal       string `json:"calendar"`
 	Tickets   string `json:"tickets"`
 	ACF       string `json:"acf"`
+	API       string `json:"api"`
 	ECBase    string `json:"ecbase"`
 	Gravity   string `json:"gravity"`
 	Poly      string `json:"poly"`
@@ -67,9 +68,10 @@ var (
 		{"<em>", "**"},
 		{"</em>", "**"},
 	}
-	versions = [1][2]string{{".", "-"}}
-	content  []byte
-	version  string
-	filter   Filters
-	post     Post
+	local         = hd + "/Documents/github/silkworm/"
+	versions      = [1][2]string{{".", "-"}}
+	content, body []byte
+	version       string
+	filter        Filters
+	post          Post
 )
