@@ -16,7 +16,7 @@ func execute(name string, task ...string) {
 	exec.Command(lpath, task...).CombinedOutput()
 }
 
-// Run a command, then capture and return the output as a byte
+// Run a command, then capture and return the output as a byte variable
 func capture(name string, task ...string) []byte {
 	lpath, err := exec.LookPath(name)
 	inspect(err)
@@ -24,7 +24,7 @@ func capture(name string, task ...string) []byte {
 	return osCmd
 }
 
-// Run standard commands and print the output to the terminal
+// Run a command, then print the output to the terminal
 func verbose(name string, task ...string) {
 	path, err := exec.LookPath(name)
 	osCmd := exec.Command(path, task...)
@@ -34,7 +34,7 @@ func verbose(name string, task ...string) {
 	inspect(err)
 }
 
-// Check for errors, log the result if found
+// Check for errors, halt the program if found
 func inspect(err error) {
 	if err != nil {
 		panic(err)
