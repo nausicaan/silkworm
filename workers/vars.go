@@ -1,5 +1,23 @@
 package workers
 
+// Links builds
+type Links struct {
+	Cal       string `json:"calendar"`
+	Tickets   string `json:"tickets"`
+	ACF       string `json:"acf"`
+	Gravity   string `json:"gravity"`
+	Poly      string `json:"poly"`
+	WordPress string `json:"wordpress"`
+	WPExport  string `json:"wpexport"`
+}
+
+// Secrets builds
+type Secrets struct {
+	API   string `json:"api"`
+	Curl  string `json:"curl"`
+	Token string `json:"token"`
+}
+
 // Filters builds the parameters for sed to execute on the scrapped.txt file
 type Filters struct {
 	OPH1      string `json:"oph1"`
@@ -11,15 +29,6 @@ type Filters struct {
 	CLH3      string `json:"clh3"`
 	CLH4      string `json:"clh4"`
 	End       string `json:"end"`
-	Cal       string `json:"calendar"`
-	Tickets   string `json:"tickets"`
-	ACF       string `json:"acf"`
-	API       string `json:"api"`
-	ECBase    string `json:"ecbase"`
-	Gravity   string `json:"gravity"`
-	Poly      string `json:"poly"`
-	WordPress string `json:"wordpress"`
-	WPExport  string `json:"wpexport"`
 	Special   string `json:"special"`
 	Spotlight string `json:"spotlight"`
 }
@@ -57,6 +66,7 @@ const (
 
 var (
 	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "<code>", "</code>", "</div>", "</div>", "<p>", "</p>", "<span>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
+	jsons        = []string{"defaults/body.json", "defaults/filters.json", "defaults/links.json", "defaults/secret.json"}
 	replacements = [9][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
@@ -68,10 +78,12 @@ var (
 		{"<em>", "**"},
 		{"</em>", "**"},
 	}
-	local         = hd + "/Documents/github/silkworm/"
-	versions      = [1][2]string{{".", "-"}}
-	content, body []byte
-	version       string
-	filter        Filters
-	post          Post
+	local    = hd + "/Documents/github/silkworm/"
+	versions = [1][2]string{{".", "-"}}
+	content  []byte
+	version  string
+	filter   Filters
+	post     Post
+	link     Links
+	secret   Secrets
 )

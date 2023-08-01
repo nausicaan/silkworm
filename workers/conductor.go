@@ -13,20 +13,25 @@ var hd, _ = os.UserHomeDir()
 
 // Quarterback is in charge of directing the program
 func Quarterback() {
-	jsoner("defaults/body.json")
-	jsoner("defaults/vars.json")
+	jsoner()
 	sifter()
 }
 
-// Read the passed JSON file and Unmarshal the data into a go structure
-func jsoner(target string) {
-	data, err := os.ReadFile(local + target)
-	inspect(err)
-	if strings.Contains(target, "body") {
-		json.Unmarshal([]byte(data), &post)
-		body = data
-	} else {
-		json.Unmarshal([]byte(data), &filter)
+// Read the JSON files and Unmarshal the data into the appropriate Go structure
+func jsoner() {
+	for _, element := range jsons {
+		data, err := os.ReadFile(element)
+		inspect(err)
+		switch element {
+		case "defaults/body.json":
+			json.Unmarshal([]byte(data), &post)
+		case "defaults/filters.json":
+			json.Unmarshal([]byte(data), &filter)
+		case "defaults/links.json":
+			json.Unmarshal([]byte(data), &link)
+		case "defaults/secret.json":
+			json.Unmarshal([]byte(data), &secret)
+		}
 	}
 }
 
@@ -40,11 +45,13 @@ func sifter() {
 		version = secondsplit[1]
 
 		sorter(repo, label)
-
 		changelog := append([]byte("h2. Changelog\n"), content...)
 
 		/* TODO Create Jira ticket using Description & Summary */
-		// jira(changelog)
+		post.Issues[0].Fields.Description = os.Args[1]
+		post.Issues[0].Fields.Summary = string(changelog)
+		// body, _ := json.Marshal(post)
+		// jira(body)
 
 		fmt.Println(string(changelog))
 	}
@@ -56,12 +63,12 @@ func sorter(repo, label string) {
 	case "bcgov-plugin":
 		premium(label)
 	case "freemius":
-		finder(filter.WordPress+"spotlight-social-photo-feeds/#developers", "/Changelog"+filter.Spotlight)
+		finder(link.WordPress+"spotlight-social-photo-feeds/#developers", "/Changelog"+filter.Spotlight)
 		content = capture("sed", "1d", local+grepped)
 	case "wpengine":
-		finder(filter.ACF, "/Changelog"+filter.CLH1)
+		finder(link.ACF, "/Changelog"+filter.CLH1)
 	default:
-		finder(filter.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
+		finder(link.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
 		content = capture("sed", "1d", local+grepped)
 	}
 }
@@ -71,15 +78,15 @@ func premium(label string) {
 	v := bytes.ReplaceAll([]byte(version), []byte(versions[0][0]), []byte(versions[0][1]))
 	switch label {
 	case "events-calendar-pro":
-		finder(filter.Cal+string(v)+"/", "/"+version+filter.CLH2)
+		finder(link.Cal+string(v)+"/", "/"+version+filter.CLH2)
 	case "gravityforms":
-		finder(filter.Gravity, filter.OPH3+version+filter.End)
+		finder(link.Gravity, filter.OPH3+version+filter.End)
 	case "polylang-pro":
-		finder(filter.Poly, filter.OPH4+version+filter.End)
+		finder(link.Poly, filter.OPH4+version+filter.End)
 	case "event-tickets-plus":
-		finder(filter.Tickets+string(v)+"/", "/"+version+filter.Special)
+		finder(link.Tickets+string(v)+"/", "/"+version+filter.Special)
 	case "wp-all-export-pro":
-		finder(filter.WPExport, "/"+version+filter.CLH4)
+		finder(link.WPExport, "/"+version+filter.CLH4)
 		content = capture("sed", "${/h3./d;}", local+grepped)
 	}
 }
@@ -99,10 +106,12 @@ func finder(link, filter string) {
 	document(local+grepped, grep)
 	content = capture("sed", "/^$/d", local+grepped)
 	document(local+grepped, content)
+	content = capture("sed", "s/	//g", local+grepped)
+	document(local+grepped, content)
 }
 
-func jira(changelog []byte) {
-	posturl := filter.API
+func jira(body []byte) {
+	posturl := secret.API
 	request, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
 	inspect(err)
 
@@ -113,9 +122,6 @@ func jira(changelog []byte) {
 	inspect(err)
 
 	defer response.Body.Close()
-
-	post.Issues[0].Fields.Description = os.Args[1]
-	post.Issues[0].Fields.Summary = string(changelog)
 
 	// derr := json.NewDecoder(response.Body).Decode(post)
 	// inspect(derr)
