@@ -13,9 +13,10 @@ type Links struct {
 
 // Secrets builds
 type Secrets struct {
-	API   string `json:"api"`
-	Curl  string `json:"curl"`
-	Token string `json:"token"`
+	Issue   string `json:"issue"`
+	Token   string `json:"token"`
+	Myself  string `json:"myself"`
+	MyselfA string `json:"myselfA"`
 }
 
 // Filters builds the parameters for sed to execute on the scrapped.txt file
@@ -29,7 +30,7 @@ type Filters struct {
 	CLH3      string `json:"clh3"`
 	CLH4      string `json:"clh4"`
 	End       string `json:"end"`
-	Special   string `json:"special"`
+	Event     string `json:"event"`
 	Spotlight string `json:"spotlight"`
 }
 

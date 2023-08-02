@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"strings"
 )
@@ -45,14 +44,13 @@ func sifter() {
 		version = secondsplit[1]
 
 		sorter(repo, label)
-		changelog := append([]byte("h2. Changelog\n"), content...)
+		changelog := append([]byte(header), content...)
 
 		/* TODO Create Jira ticket using Description & Summary */
 		post.Issues[0].Fields.Description = os.Args[1]
 		post.Issues[0].Fields.Summary = string(changelog)
 		// body, _ := json.Marshal(post)
-		// jira(body)
-
+		// response := capture("curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)
 		fmt.Println(string(changelog))
 	}
 }
@@ -78,13 +76,15 @@ func premium(label string) {
 	v := bytes.ReplaceAll([]byte(version), []byte(versions[0][0]), []byte(versions[0][1]))
 	switch label {
 	case "events-calendar-pro":
-		finder(link.Cal+string(v)+"/", "/"+version+filter.CLH2)
+		finder(link.Cal+string(v)+"/", "/"+version+filter.Event)
+		eventfilter()
+	case "event-tickets-plus":
+		finder(link.Tickets+string(v)+"/", "/"+version+filter.Event)
+		eventfilter()
 	case "gravityforms":
 		finder(link.Gravity, filter.OPH3+version+filter.End)
 	case "polylang-pro":
 		finder(link.Poly, filter.OPH4+version+filter.End)
-	case "event-tickets-plus":
-		finder(link.Tickets+string(v)+"/", "/"+version+filter.Special)
 	case "wp-all-export-pro":
 		finder(link.WPExport, "/"+version+filter.CLH4)
 		content = capture("sed", "${/h3./d;}", local+grepped)
@@ -104,29 +104,13 @@ func finder(link, filter string) {
 		grep = replace
 	}
 	document(local+grepped, grep)
-	content = capture("sed", "/^$/d", local+grepped)
-	document(local+grepped, content)
-	content = capture("sed", "s/	//g", local+grepped)
+	content = capture("sed", "/^$/d ; s/	//g", local+grepped)
 	document(local+grepped, content)
 }
 
-func jira(body []byte) {
-	posturl := secret.API
-	request, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
-	inspect(err)
-
-	request.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	response, err := client.Do(request)
-	inspect(err)
-
-	defer response.Body.Close()
-
-	// derr := json.NewDecoder(response.Body).Decode(post)
-	// inspect(derr)
-
-	if response.StatusCode != http.StatusCreated {
-		panic(response.Status)
-	}
+func eventfilter() {
+	content = capture("grep", "-v", "<", local+grepped)
+	document(local+grepped, content)
+	content = capture("sed", "1,3d", local+grepped)
+	content = append([]byte("h3. "+version+"\n"), content...)
 }
