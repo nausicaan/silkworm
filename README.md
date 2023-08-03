@@ -27,13 +27,13 @@ GOOS=linux GOARCH=amd64 go build -o [name] main.go
 ## Run
 
 ```bash
-[program] [vendor/plugin]:[version]
+[program] [flag] [vendor/plugin]:[version]
 ```
 
 Example:
 
 ```bash
-silkworm wpackagist-plugin/all-in-one-seo-pack:4.4.1
+silkworm -c wpackagist-plugin/all-in-one-seo-pack:4.4.1
 ```
 
 ## License
