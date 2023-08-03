@@ -18,17 +18,17 @@ func Quarterback() {
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func jsoner() {
-	for _, element := range jsons {
+	for index, element := range jsons {
 		data, err := os.ReadFile(element)
 		inspect(err)
-		switch element {
-		case "defaults/body.json":
+		switch index {
+		case 0:
 			json.Unmarshal([]byte(data), &post)
-		case "defaults/filters.json":
+		case 1:
 			json.Unmarshal([]byte(data), &filter)
-		case "defaults/links.json":
+		case 2:
 			json.Unmarshal([]byte(data), &link)
-		case "defaults/secret.json":
+		case 3:
 			json.Unmarshal([]byte(data), &secret)
 		}
 	}
@@ -37,21 +37,23 @@ func jsoner() {
 // Iterate through the Args array and assign plugin and ticket values
 func sifter() {
 	for i := 1; i < len(os.Args); i++ {
-		firstsplit := strings.Split(os.Args[i], "/")
-		repo := firstsplit[0]
-		secondsplit := strings.Split(firstsplit[1], ":")
-		label := secondsplit[0]
-		version = secondsplit[1]
+		if len(os.Args[i]) > 25 {
+			firstsplit := strings.Split(os.Args[i], "/")
+			repo := firstsplit[0]
+			secondsplit := strings.Split(firstsplit[1], ":")
+			label := secondsplit[0]
+			version = secondsplit[1]
 
-		sorter(repo, label)
-		changelog := append([]byte(header), content...)
+			sorter(repo, label)
+			changelog := append([]byte(header), content...)
 
-		/* TODO Create Jira ticket using Description & Summary */
-		post.Issues[0].Fields.Description = os.Args[1]
-		post.Issues[0].Fields.Summary = string(changelog)
-		// body, _ := json.Marshal(post)
-		// response := capture("curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)
-		fmt.Println(string(changelog))
+			/* TODO Create Jira ticket using Description & Summary */
+			post.Issues[0].Fields.Description = os.Args[1]
+			post.Issues[0].Fields.Summary = string(changelog)
+			// body, _ := json.Marshal(post)
+			// response := capture("curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)
+			fmt.Println(string(changelog))
+		}
 	}
 }
 

@@ -67,7 +67,7 @@ const (
 
 var (
 	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "<code>", "</code>", "</div>", "</div>", "<p>", "</p>", "<span>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
-	jsons        = []string{"defaults/body.json", "defaults/filters.json", "defaults/links.json", "defaults/secret.json"}
+	jsons        = []string{local + "defaults/body.json", local + "defaults/filters.json", local + "defaults/links.json", local + "defaults/secret.json"}
 	replacements = [9][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},

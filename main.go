@@ -18,37 +18,23 @@ const (
 
 // Launch the program and execute according to the supplied flag
 func main() {
-	trigger := verify()
-	if len(trigger) > 25 {
-		trigger = "-g"
-	}
-	switch trigger {
-	case "-v", "--version":
-		fmt.Println(yellow+"Silkworm", green+bv)
-		fmt.Println(reset)
-	case "-h", "--help":
-		about()
-	case "-z":
+	if len(os.Args) == 1 {
 		alert("No arguments detected -")
 		about()
-	case "-g":
-		workers.Quarterback()
-	default:
-		alert("Unknown argument(s) supplied -")
-		about()
-	}
-}
-
-// Test for the minimum number of arguments
-func verify() string {
-	passed := len(os.Args)
-	var f string
-	if passed == 1 {
-		f = "-z"
 	} else {
-		f = os.Args[1]
+		switch os.Args[1] {
+		case "-c", "--create":
+			workers.Quarterback()
+		case "-h", "--help":
+			about()
+		case "-v", "--version":
+			fmt.Println(yellow+"Silkworm", green+bv)
+			fmt.Println(reset)
+		default:
+			alert("Unknown argument(s) supplied -")
+			about()
+		}
 	}
-	return f
 }
 
 // about prints help information for using the program
