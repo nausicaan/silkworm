@@ -51,7 +51,7 @@ func sifter() {
 			post.Issues[0].Fields.Description = os.Args[1]
 			post.Issues[0].Fields.Summary = string(changelog)
 			// body, _ := json.Marshal(post)
-			// response := capture("curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)
+			// response := execute("-c", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)
 			fmt.Println(string(changelog))
 		}
 	}
@@ -64,12 +64,12 @@ func sorter(repo, label string) {
 		premium(label)
 	case "freemius":
 		finder(link.WordPress+"spotlight-social-photo-feeds/#developers", "/Changelog"+filter.Spotlight)
-		content = capture("sed", "1d", local+grepped)
+		content = execute("-c", "sed", "1d", local+grepped)
 	case "wpengine":
 		finder(link.ACF, "/Changelog"+filter.CLH1)
 	default:
 		finder(link.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
-		content = capture("sed", "1d", local+grepped)
+		content = execute("-c", "sed", "1d", local+grepped)
 	}
 }
 
@@ -89,14 +89,14 @@ func premium(label string) {
 		finder(link.Poly, filter.OPH4+version+filter.End)
 	case "wp-all-export-pro":
 		finder(link.WPExport, "/"+version+filter.CLH4)
-		content = capture("sed", "${/h3./d;}", local+grepped)
+		content = execute("-c", "sed", "${/h3./d;}", local+grepped)
 	}
 }
 
 // Find and replace/delete html tags
 func finder(link, filter string) {
-	execute("curl", "-s", link, "-o", local+scraped)
-	grep := capture("sed", "-n", filter, local+scraped)
+	execute("-e", "curl", "-s", link, "-o", local+scraped)
+	grep := execute("-c", "sed", "-n", filter, local+scraped)
 	for _, v := range deletions {
 		replace := bytes.ReplaceAll(grep, []byte(v), []byte(""))
 		grep = replace
@@ -106,13 +106,13 @@ func finder(link, filter string) {
 		grep = replace
 	}
 	document(local+grepped, grep)
-	content = capture("sed", "/^$/d ; s/	//g", local+grepped)
+	content = execute("-c", "sed", "/^$/d ; s/	//g", local+grepped)
 	document(local+grepped, content)
 }
 
 func eventfilter() {
-	content = capture("grep", "-v", "<", local+grepped)
+	content = execute("-c", "grep", "-v", "<", local+grepped)
 	document(local+grepped, content)
-	content = capture("sed", "1,3d", local+grepped)
+	content = execute("-c", "sed", "1,3d", local+grepped)
 	content = append([]byte("h3. "+version+"\n"), content...)
 }
