@@ -2,11 +2,12 @@ package workers
 
 // Links builds
 type Links struct {
-	Cal       string `json:"calendar"`
-	Tickets   string `json:"tickets"`
 	ACF       string `json:"acf"`
+	Calendar  string `json:"calendar"`
 	Gravity   string `json:"gravity"`
 	Poly      string `json:"poly"`
+	Tickets   string `json:"tickets"`
+	Virtual   string `json:"virtual"`
 	WordPress string `json:"wordpress"`
 	WPExport  string `json:"wpexport"`
 }

@@ -78,10 +78,13 @@ func premium(label string) {
 	v := bytes.ReplaceAll([]byte(version), []byte(versions[0][0]), []byte(versions[0][1]))
 	switch label {
 	case "events-calendar-pro":
-		finder(link.Cal+string(v)+"/", "/"+version+filter.Event)
+		finder(link.Calendar+string(v)+"/", "/"+version+filter.Event)
 		eventfilter()
 	case "event-tickets-plus":
 		finder(link.Tickets+string(v)+"/", "/"+version+filter.Event)
+		eventfilter()
+	case "events-virtual":
+		finder(link.Virtual+string(v)+"/", "/"+version+filter.Event)
 		eventfilter()
 	case "gravityforms":
 		finder(link.Gravity, filter.OPH3+version+filter.End)
