@@ -14,25 +14,25 @@ From the root folder containing *main.go*, use the command that matches your env
 
 ### Windows & Mac:
 
-```bash
+``` console
 go build -o [name] main.go
 ```
 
 ### Linux:
 
-```bash
+``` console
 GOOS=linux GOARCH=amd64 go build -o [name] main.go
 ```
 
 ## Run
 
-```bash
+``` console
 [program] [flag] [vendor/plugin]:[version]
 ```
 
 Example:
 
-```bash
+``` console
 silkworm -c wpackagist-plugin/all-in-one-seo-pack:4.4.1
 ```
 

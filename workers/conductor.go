@@ -36,15 +36,15 @@ func jsoner() {
 
 // Iterate through the Args array and assign plugin and ticket values
 func sifter() {
-	for i := 1; i < len(os.Args); i++ {
+	for i := 2; i < len(os.Args); i++ {
 		if len(os.Args[i]) > 25 {
 			firstsplit := strings.Split(os.Args[i], "/")
-			repo := firstsplit[0]
+			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
-			label := secondsplit[0]
+			label = secondsplit[0]
 			version = secondsplit[1]
 
-			sorter(repo, label)
+			sorter()
 			changelog := append([]byte(header), content...)
 
 			/* TODO Create Jira ticket using Description & Summary */
@@ -58,7 +58,7 @@ func sifter() {
 }
 
 // Sort the query based on repository name
-func sorter(repo, label string) {
+func sorter() {
 	switch repo {
 	case "bcgov-plugin":
 		premium(label)
