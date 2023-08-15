@@ -59,6 +59,9 @@ func sifter() {
 
 // Sort the query based on repository name
 func sorter() {
+	if label == "spotlight-social-photo-feeds" {
+		repo = "freemius"
+	}
 	switch repo {
 	case "bcgov-plugin":
 		premium(label)
