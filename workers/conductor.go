@@ -23,13 +23,13 @@ func jsoner() {
 		inspect(err)
 		switch index {
 		case 0:
-			json.Unmarshal([]byte(data), &post)
+			json.Unmarshal(data, &post)
 		case 1:
-			json.Unmarshal([]byte(data), &filter)
+			json.Unmarshal(data, &filter)
 		case 2:
-			json.Unmarshal([]byte(data), &link)
+			json.Unmarshal(data, &link)
 		case 3:
-			json.Unmarshal([]byte(data), &secret)
+			json.Unmarshal(data, &secret)
 		}
 	}
 }
