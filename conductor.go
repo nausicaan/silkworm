@@ -1,4 +1,4 @@
-package workers
+package main
 
 import (
 	"bytes"
@@ -9,12 +9,6 @@ import (
 )
 
 var hd, _ = os.UserHomeDir()
-
-// Quarterback is in charge of directing the program
-func Quarterback() {
-	jsoner()
-	sifter()
-}
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func jsoner() {
@@ -36,9 +30,9 @@ func jsoner() {
 
 // Iterate through the Args array and assign plugin and ticket values
 func sifter() {
-	for i := 2; i < len(os.Args); i++ {
+	for i := 2; i < inputs; i++ {
 		if len(os.Args[i]) > 25 {
-			firstsplit := strings.Split(os.Args[i], "/")
+			firstsplit := strings.Split(passed[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
 			label = secondsplit[0]
@@ -48,7 +42,7 @@ func sifter() {
 			changelog := append([]byte(header), content...)
 
 			/* TODO Create Jira ticket using Description & Summary */
-			post.Issues[0].Fields.Description = os.Args[1]
+			post.Issues[0].Fields.Description = passed[1]
 			post.Issues[0].Fields.Summary = string(changelog)
 			// body, _ := json.Marshal(post)
 			// response := execute("-c", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+secret.Token, "-H", "Content-Type: application/json", secret.Issue)

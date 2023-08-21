@@ -1,4 +1,4 @@
-package workers
+package main
 
 // Links builds a collection of urls to target changlogs
 type Links struct {
@@ -63,7 +63,15 @@ type Post struct {
 }
 
 const (
-	scraped, grepped, header string = "temp/scrape.txt", "temp/grep.txt", "h2. Changelog\n"
+	scraped string = "temp/scrape.txt"
+	grepped string = "temp/grep.txt"
+	header  string = "h2. Changelog\n"
+	bv      string = "2.0"
+	reset   string = "\033[0m"
+	green   string = "\033[32m"
+	yellow  string = "\033[33m"
+	red     string = "\033[41m"
+	halt    string = "program halted"
 )
 
 var (
@@ -82,6 +90,7 @@ var (
 	}
 	local    = hd + "/Documents/github/silkworm/"
 	versions = [1][2]string{{".", "-"}}
+	inputs   = len(passed)
 	content  []byte
 	version  string
 	repo     string
