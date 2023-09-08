@@ -60,10 +60,10 @@ func sorter() {
 	case "bcgov-plugin":
 		premium(label)
 	case "freemius":
-		finder(link.WordPress+"spotlight-social-photo-feeds/#developers", "/Changelog"+filter.Spotlight)
-		content = execute("-c", "sed", "1d", local+grepped)
+		finder(link.Spotlight, filter.OSP+"v"+version+filter.ESP)
 	case "wpengine":
-		finder(link.ACF, "/Changelog"+filter.CLH1)
+		finder(link.WordPress+"advanced-custom-fields/#developers", "/Changelog"+filter.CLH2)
+		content = execute("-c", "sed", "1d", local+grepped)
 	default:
 		finder(link.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
 		content = execute("-c", "sed", "1d", local+grepped)
