@@ -8,10 +8,12 @@ import (
 
 var passed = os.Args
 
+// Write a passed variable to a named file
 func document(name string, d []byte) {
 	inspect(os.WriteFile(name, d, 0666))
 }
 
+// Run a terminal command using flags to customize the output
 func execute(variation, task string, args ...string) []byte {
 	osCmd := exec.Command(task, args...)
 	switch variation {
@@ -62,6 +64,7 @@ func alert(message string) {
 	fmt.Println("\n"+red, message, halt, reset)
 }
 
+// Display the build version of the program
 func build() {
 	fmt.Println(yellow+"Silkworm", green+bv, reset)
 }

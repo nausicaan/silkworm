@@ -65,8 +65,8 @@ type Post struct {
 }
 
 const (
-	scraped string = "temp/scrape.txt"
-	grepped string = "temp/grep.txt"
+	scraped string = "source/scrape.txt"
+	grepped string = "source/grep.txt"
 	header  string = "h2. Changelog\n"
 	bv      string = "2.0"
 	reset   string = "\033[0m"
