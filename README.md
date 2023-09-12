@@ -10,18 +10,18 @@ Silkworm is a WordPress plugin update ticket creation tool. It's meant to bridge
 
 ## Build
 
-From the root folder containing *main.go*, use the command that matches your environment:
+From the root folder the `go` files, use the command that matches your environment:
 
 ### Windows & Mac:
 
 ``` console
-go build -o [name] main.go
+go build -o [name] .
 ```
 
 ### Linux:
 
 ``` console
-GOOS=linux GOARCH=amd64 go build -o [name] main.go
+GOOS=linux GOARCH=amd64 go build -o [name] .
 ```
 
 ## Run
