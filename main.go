@@ -8,7 +8,7 @@ func main() {
 	} else {
 		switch passed[1] {
 		case "-c", "--create":
-			jsoner()
+			serialize()
 			sifter()
 		case "-h", "--help":
 			about()

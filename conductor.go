@@ -11,7 +11,7 @@ import (
 var hd, _ = os.UserHomeDir()
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
-func jsoner() {
+func serialize() {
 	for index, element := range jsons {
 		data, err := os.ReadFile(element)
 		inspect(err)

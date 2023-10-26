@@ -6,7 +6,7 @@ Silkworm is a WordPress plugin update ticket creation tool. It's meant to bridge
 
 ## Prerequisite
 
-- Googles' [Go language](https://go.dev) installed to enable building executables from source code.
+Googles' [Go language](https://go.dev) installed to enable building executables from source code.
 
 ## Build
 

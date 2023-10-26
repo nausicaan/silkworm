@@ -1,0 +1,30 @@
+{
+  "issues": [
+    {
+      "fields": {
+        "assignee": {
+          "key": "JIRAUSER20908"
+        },
+        "issuetype": {
+          "id": "11603"
+        },
+        "creator": {
+          "key": "JIRAUSER20908"
+        },
+        "labels": [
+          "WordPress-Plugin",
+          "WordPress-Update"
+        ],
+        "reporter": {
+          "key": "JIRAUSER20908"
+        },
+        "project": {
+          "id": "18702",
+          "key": "DESSO"
+        },
+        "description": "Test",
+        "summary": "test ticket"
+      }
+    }
+  ]
+}

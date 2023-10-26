@@ -1,0 +1,11 @@
+{
+    "wordpress": "https://wordpress.org/plugins/",
+    "spotlight": "https://spotlightwp.com/changelog/",
+    "acf": "https://www.advancedcustomfields.com/changelog/",
+    "poly": "https://polylang.pro/downloads/polylang-pro/?changelog=1",
+    "gravity": "https://docs.gravityforms.com/gravityforms-change-log/",
+    "wpexport": "https://www.wpallimport.com/downloads/wp-all-export-pro/?changelog=1",
+    "virtual": "https://theeventscalendar.com/release-notes/virtual-events/virtual-events-",
+    "tickets": "https://theeventscalendar.com/release-notes/event-tickets-plus/event-tickets-plus-",
+    "calendar": "https://theeventscalendar.com/release-notes/events-calendar-pro/events-calendar-pro-"
+}
