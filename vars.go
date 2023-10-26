@@ -15,10 +15,8 @@ type Links struct {
 
 // Secrets builds a list of secret tokens and api addresses
 type Secrets struct {
-	Issue   string `json:"issue"`
-	Token   string `json:"token"`
-	Myself  string `json:"myself"`
-	MyselfA string `json:"myselfA"`
+	Issue string `json:"issue"`
+	Token string `json:"token"`
 }
 
 // Filters builds the parameters for sed to execute on the scrapped.txt file
@@ -78,7 +76,7 @@ const (
 
 var (
 	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "</div>", "</div>", "<p>", "</p>", "<span>", "<entry>", "</entry>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
-	jsons        = []string{local + "defaults/body.json", local + "defaults/filters.json", local + "defaults/links.json", local + "defaults/secret.json"}
+	jsons        = []string{local + "defaults/body.json", local + "defaults/filters.json", local + "defaults/links.json", local + "defaults/jira.json"}
 	replacements = [11][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
