@@ -45,7 +45,7 @@ func sifter() {
 			post.Issues[0].Fields.Description = passed[1]
 			post.Issues[0].Fields.Summary = string(changelog)
 			// body, _ := json.Marshal(post)
-			// response := execute("-c", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Issue)
+			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Issue)
 			fmt.Println(string(changelog))
 		}
 	}

@@ -65,7 +65,7 @@ type Post struct {
 const (
 	scraped string = "source/scrape.txt"
 	grepped string = "source/grep.txt"
-	header  string = "h2. Changelog\n"
+	header  string = "h2. Changelog\n\n"
 	bv      string = "2.0"
 	reset   string = "\033[0m"
 	green   string = "\033[32m"
@@ -76,7 +76,7 @@ const (
 
 var (
 	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "</div>", "</div>", "<p>", "</p>", "<span>", "<entry>", "</entry>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
-	jsons        = []string{local + "defaults/body.json", local + "defaults/filters.json", local + "defaults/links.json", local + "defaults/jira.json"}
+	jsons        = []string{local + "jsons/body.json", local + "jsons/filters.json", local + "jsons/links.json", local + "jsons/jira.json"}
 	replacements = [11][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
