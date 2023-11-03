@@ -13,8 +13,8 @@ type Links struct {
 	WPExport  string `json:"wpexport"`
 }
 
-// Secrets builds a list of secret tokens and api addresses
-type Secrets struct {
+// Atlassian builds a list of jira tokens and api addresses
+type Atlassian struct {
 	Issue string `json:"issue"`
 	Token string `json:"token"`
 }
@@ -100,5 +100,5 @@ var (
 	post     Post
 	link     Links
 	filter   Filters
-	secret   Secrets
+	jira     Atlassian
 )
