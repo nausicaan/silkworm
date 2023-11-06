@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var hd, _ = os.UserHomeDir()
+var hmdr, _ = os.UserHomeDir()
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func serialize() {
@@ -31,14 +31,14 @@ func serialize() {
 // Download the update file produced from Platypus using SCP
 func scopy() {
 	message("Downloading the list of avaiable updates")
-	destination := strings.Trim(pwd, "\n") + "/updates.txt"
+	destination := hmdr + "/updates.txt"
 	execute("-e", "scp", source, destination)
 	fmt.Print(destination)
 }
 
 // Iterate through the Args array and assign plugin and ticket values
 func sifter() {
-	goals := read(strings.Trim(pwd, "\n") + "/updates.txt")
+	goals := read(hmdr + "/updates.txt")
 	updates := strings.Split(string(goals), "\n")
 	for i := 0; i < len(updates); i++ {
 		if len(updates[i]) > 25 {
@@ -73,10 +73,10 @@ func sorter() {
 		finder(link.Spotlight, filter.OSP+"v"+version+filter.ESP)
 	case "wpengine":
 		finder(link.WordPress+"advanced-custom-fields/#developers", "/Changelog"+filter.CLH2)
-		content = execute("-c", "sed", "1d", local+grepped)
+		content = execute("-c", "sed", "1d", hmdr+"/grep.txt")
 	default:
 		finder(link.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
-		content = execute("-c", "sed", "1d", local+grepped)
+		content = execute("-c", "sed", "1d", hmdr+"/grep.txt")
 	}
 }
 
@@ -99,14 +99,14 @@ func premium(label string) {
 		finder(link.Poly, filter.OPH4+version+filter.End)
 	case "wp-all-export-pro":
 		finder(link.WPExport, "/"+version+filter.CLH4)
-		content = execute("-c", "sed", "${/h3./d;}", local+grepped)
+		content = execute("-c", "sed", "${/h3./d;}", hmdr+"/grep.txt")
 	}
 }
 
 // Find and replace/delete html tags
 func finder(link, filter string) {
-	execute("-e", "curl", "-s", link, "-o", local+scraped)
-	grep := execute("-c", "sed", "-n", filter, local+scraped)
+	execute("-e", "curl", "-s", link, "-o", hmdr+"/scrape.txt")
+	grep := execute("-c", "sed", "-n", filter, hmdr+"/scrape.txt")
 	for _, v := range deletions {
 		replace := bytes.ReplaceAll(grep, []byte(v), []byte(""))
 		grep = replace
@@ -115,15 +115,15 @@ func finder(link, filter string) {
 		replace := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
 		grep = replace
 	}
-	document(local+grepped, grep)
-	content = execute("-c", "sed", "/^$/d ; s/	//g", local+grepped)
-	document(local+grepped, content)
+	document(hmdr+"/grep.txt", grep)
+	content = execute("-c", "sed", "/^$/d ; s/	//g", hmdr+"/grep.txt")
+	document(hmdr+"/grep.txt", content)
 }
 
 // Special filter to handle the Events Calendar suite of updates
 func eventfilter() {
-	content = execute("-c", "grep", "-v", "<", local+grepped)
-	document(local+grepped, content)
-	content = execute("-c", "sed", "1,3d", local+grepped)
+	content = execute("-c", "grep", "-v", "<", hmdr+"/grep.txt")
+	document(hmdr+"/grep.txt", content)
+	content = execute("-c", "sed", "1,3d", hmdr+"/grep.txt")
 	content = append([]byte("h3. "+version+"\n"), content...)
 }

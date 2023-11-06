@@ -10,7 +10,7 @@ func main() {
 	} else {
 		switch os.Args[1] {
 		case "-c", "--create":
-			scopy()
+			// scopy()
 			message("Creating tickets")
 			serialize()
 			sifter()
@@ -22,5 +22,8 @@ func main() {
 			alert("Unknown argument(s) supplied -")
 			about()
 		}
+	}
+	for _, v := range temp {
+		cleanup(v)
 	}
 }
