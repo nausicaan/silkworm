@@ -28,11 +28,21 @@ func serialize() {
 	}
 }
 
+// Download the update file produced from Platypus using SCP
+func scopy() {
+	message("Downloading the list of avaiable updates")
+	destination := strings.Trim(pwd, "\n") + "/updates.txt"
+	execute("-e", "scp", source, destination)
+	fmt.Print(destination)
+}
+
 // Iterate through the Args array and assign plugin and ticket values
 func sifter() {
-	for i := 2; i < inputs; i++ {
-		if len(os.Args[i]) > 25 {
-			firstsplit := strings.Split(passed[i], "/")
+	goals := read(strings.Trim(pwd, "\n") + "/updates.txt")
+	updates := strings.Split(string(goals), "\n")
+	for i := 0; i < len(updates); i++ {
+		if len(updates[i]) > 25 {
+			firstsplit := strings.Split(updates[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
 			label = secondsplit[0]
@@ -42,7 +52,7 @@ func sifter() {
 			changelog := append([]byte(header), content...)
 
 			/* TODO Create Jira ticket using Description & Summary */
-			post.Issues[0].Fields.Description = passed[1]
+			post.Issues[0].Fields.Description = updates[1]
 			post.Issues[0].Fields.Summary = string(changelog)
 			// body, _ := json.Marshal(post)
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Issue)
@@ -110,6 +120,7 @@ func finder(link, filter string) {
 	document(local+grepped, content)
 }
 
+// Special filter to handle the Events Calendar suite of updates
 func eventfilter() {
 	content = execute("-c", "grep", "-v", "<", local+grepped)
 	document(local+grepped, content)

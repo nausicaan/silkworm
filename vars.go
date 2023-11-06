@@ -91,8 +91,8 @@ var (
 		{"</code>", "*"},
 	}
 	local    = hd + "/Documents/github/silkworm/"
+	pwd      = string(execute("-c", "pwd"))
 	versions = [1][2]string{{".", "-"}}
-	inputs   = len(passed)
 	content  []byte
 	version  string
 	repo     string

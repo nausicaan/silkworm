@@ -1,13 +1,17 @@
 package main
 
+import "os"
+
 // Launch the program and execute according to the supplied flag
 func main() {
-	if inputs == 1 {
+	if len(os.Args) < 1 {
 		alert("No arguments detected -")
 		about()
 	} else {
-		switch passed[1] {
+		switch os.Args[1] {
 		case "-c", "--create":
+			scopy()
+			message("Creating tickets")
 			serialize()
 			sifter()
 		case "-h", "--help":

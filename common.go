@@ -6,8 +6,6 @@ import (
 	"os/exec"
 )
 
-var passed = os.Args
-
 // Write a passed variable to a named file
 func document(name string, d []byte) {
 	inspect(os.WriteFile(name, d, 0666))
@@ -38,12 +36,30 @@ func inspect(err error) {
 	}
 }
 
-// Remove files or directories
-func cleanup(cut ...string) {
-	inspect(os.Remove(cut[0.]))
+// Read any file and return the contents as a byte variable
+func read(file string) []byte {
+	outcome, problem := os.ReadFile(file)
+	inspect(problem)
+	return outcome
 }
 
-// about prints help information for using the program
+// Provide and highlight informational messages
+func message(message string) {
+	fmt.Println(yellow)
+	fmt.Println("**", reset, message, yellow, "**", reset)
+}
+
+// Print a colourized error message
+func alert(message string) {
+	fmt.Println("\n"+red, message, halt, reset)
+}
+
+// Display the build version of the program
+func build() {
+	fmt.Println(yellow+"Silkworm", green+bv, reset)
+}
+
+// Print help information for using the program
 func about() {
 	fmt.Println(yellow, "\nUsage:", reset)
 	fmt.Println("  [program] [flag] [vendor/plugin]:[version]")
@@ -59,12 +75,7 @@ func about() {
 	fmt.Println(reset)
 }
 
-// Alert prints a colourized error message
-func alert(message string) {
-	fmt.Println("\n"+red, message, halt, reset)
-}
-
-// Display the build version of the program
-func build() {
-	fmt.Println(yellow+"Silkworm", green+bv, reset)
+// Remove files or directories
+func cleanup(cut ...string) {
+	inspect(os.Remove(cut[0.]))
 }
