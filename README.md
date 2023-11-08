@@ -12,7 +12,7 @@ A `jira.json` file containing your API URL and Bearer token to enable ticket cre
 
 ``` go
 {
-    "issue": "Jira Issue URL",
+    "base": "Jira Issue base URL",
     "token": "Jira Bearer Token"
 }
 ```
@@ -36,13 +36,13 @@ GOOS=linux GOARCH=amd64 go build -o [name] .
 ## Run
 
 ``` console
-[program] [flag] [vendor/plugin]:[version]
+[program] [flag]
 ```
 
 Example:
 
 ``` console
-silkworm -c wpackagist-plugin/all-in-one-seo-pack:4.4.1
+silkworm -c
 ```
 
 ## License

@@ -1,16 +1,13 @@
 package main
 
-import "os"
-
 // Launch the program and execute according to the supplied flag
 func main() {
-	if len(os.Args) < 1 {
+	if len(flag) < 1 {
 		alert("No arguments detected -")
 		about()
 	} else {
-		switch os.Args[1] {
+		switch flag {
 		case "-c", "--create":
-			// scopy()
 			message("Creating tickets")
 			serialize()
 			sifter()
@@ -23,6 +20,7 @@ func main() {
 			about()
 		}
 	}
+	// finder(link.WordPress+"wpackagist-plugin/tablepress/#developers", "/Changelog"+filter.CLH2)
 	for _, v := range temp {
 		cleanup(v)
 	}

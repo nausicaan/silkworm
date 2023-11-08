@@ -22,8 +22,8 @@
           "id": "18702",
           "key": "DESSO"
         },
-        "description": "Test",
-        "summary": "test ticket"
+        "description": "A longer and more detailed explanation of the purpose and goals of the ticket.",
+        "summary": "Short, descriptive title for the new ticket."
       }
     }
   ]

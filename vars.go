@@ -15,8 +15,10 @@ type Links struct {
 
 // Atlassian builds a list of jira tokens and api addresses
 type Atlassian struct {
-	Issue string `json:"issue"`
-	Token string `json:"token"`
+	Base   string `json:"base"`
+	Token  string `json:"token"`
+	Source string `json:"source"`
+	Creds  string `json:"creds"`
 }
 
 // Filters builds the parameters for sed to execute on the scrapped.txt file
@@ -30,9 +32,15 @@ type Filters struct {
 	CLH3  string `json:"clh3"`
 	CLH4  string `json:"clh4"`
 	End   string `json:"end"`
-	Event string `json:"event"`
-	OSP   string `json:"osp"`
 	ESP   string `json:"esp"`
+	Event string `json:"event"`
+}
+
+// Ticket does some shit
+type Ticket struct {
+	Issues []struct {
+		Key string `json:"key"`
+	} `json:"issues"`
 }
 
 // Post contains the JSON parameters for a new Jira ticket
@@ -75,7 +83,7 @@ const (
 var (
 	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "</div>", "</div>", "<p>", "</p>", "<span>", "<entry>", "</entry>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
 	jsons        = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
-	temp         = []string{hmdr + "/grep.txt", hmdr + "/scrape.txt", hmdr + "/updates.txt"}
+	temp         = []string{hmdr + "/grep.txt", hmdr + "/scrape.txt"}
 	replacements = [11][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
@@ -90,7 +98,6 @@ var (
 		{"</code>", "*"},
 	}
 	gitpath  = hmdr + "/Documents/github/silkworm/"
-	pwd      = string(execute("-c", "pwd"))
 	versions = [1][2]string{{".", "-"}}
 	content  []byte
 	version  string
@@ -100,4 +107,5 @@ var (
 	link     Links
 	filter   Filters
 	jira     Atlassian
+	title    Ticket
 )

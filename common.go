@@ -6,6 +6,13 @@ import (
 	"os/exec"
 )
 
+// Download the update file produced from Platypus using SCP
+func secopy() {
+	message("Downloading the list of avaiable updates")
+	destination := hmdr + "/updates.txt"
+	execute("-e", "scp", jira.Source, destination)
+}
+
 // Write a passed variable to a named file
 func document(name string, d []byte) {
 	inspect(os.WriteFile(name, d, 0666))
