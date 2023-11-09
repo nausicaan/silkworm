@@ -51,7 +51,7 @@ func sifter() {
 // Iterate through the updates array and assign plugin and ticket values
 func engine(i int, updates []string) {
 	if len(updates[i]) > 25 {
-		if selectsql(updates[i]) != updates[i] {
+		if selectsql("SELECT title FROM tickets WHERE title = ?", updates[i]) != updates[i] {
 			firstsplit := strings.Split(updates[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
@@ -151,9 +151,9 @@ func apiget(ticket string) {
 	json.Unmarshal(result, &title)
 }
 
-func selectsql(ticket string) string {
+func selectsql(query, ticket string) string {
 	db, err := sql.Open("sqlite3", gitpath+"source/jira.db")
-	rows, err := db.Query("SELECT title FROM tickets WHERE title = ?", ticket)
+	rows, err := db.Query(query, ticket)
 	inspect(err)
 	defer rows.Close()
 

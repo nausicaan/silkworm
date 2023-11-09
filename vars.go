@@ -36,7 +36,7 @@ type Filters struct {
 	Event string `json:"event"`
 }
 
-// Ticket does some shit
+// Ticket holds the value of the DESSO-XXXX identifier
 type Ticket struct {
 	Issues []struct {
 		Key string `json:"key"`
@@ -81,9 +81,17 @@ const (
 )
 
 var (
-	deletions    = []string{"<br />", "</h1>", "</h2>", "</h3>", "</h4>", "</li>", "<ul>", "</ul>", "</div>", "</div>", "<p>", "</p>", "<span>", "<entry>", "</entry>", "</span>", "<footer>", "</footer>", "<header>", "</header>"}
-	jsons        = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
-	temp         = []string{hmdr + "/grep.txt", hmdr + "/scrape.txt"}
+	jsons     = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
+	temp      = []string{hmdr + "/grep.txt", hmdr + "/scrape.txt"}
+	deletions = []string{
+		"<br />", "</h1>", "</h2>",
+		"</h3>", "</h4>", "</li>",
+		"<ul>", "</ul>", "</div>",
+		"</div>", "<p>", "</p>",
+		"<span>", "<entry>", "</entry>",
+		"</span>", "<footer>", "</footer>",
+		"<header>", "</header>",
+	}
 	replacements = [11][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
@@ -100,12 +108,12 @@ var (
 	gitpath  = hmdr + "/Documents/github/silkworm/"
 	versions = [1][2]string{{".", "-"}}
 	content  []byte
-	version  string
-	repo     string
 	label    string
-	post     Post
-	link     Links
+	repo     string
+	version  string
 	filter   Filters
 	jira     Atlassian
+	link     Links
+	post     Post
 	title    Ticket
 )
