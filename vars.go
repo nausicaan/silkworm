@@ -18,7 +18,6 @@ type Atlassian struct {
 	Base   string `json:"base"`
 	Token  string `json:"token"`
 	Source string `json:"source"`
-	Creds  string `json:"creds"`
 }
 
 // Filters builds the parameters for sed to execute on the scrapped.txt file
@@ -82,7 +81,7 @@ const (
 
 var (
 	jsons     = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
-	temp      = []string{hmdr + "/grep.txt", hmdr + "/scrape.txt"}
+	temp      = []string{gitpath + "task/grep.txt", gitpath + "task/scrape.txt"}
 	deletions = []string{
 		"<br />", "</h1>", "</h2>",
 		"</h3>", "</h4>", "</li>",
@@ -105,15 +104,16 @@ var (
 		{"<code>", "*"},
 		{"</code>", "*"},
 	}
-	gitpath  = hmdr + "/Documents/github/silkworm/"
-	versions = [1][2]string{{".", "-"}}
-	content  []byte
-	label    string
-	repo     string
-	version  string
-	filter   Filters
-	jira     Atlassian
-	link     Links
-	post     Post
-	title    Ticket
+	gitpath   = hmdr + "/Documents/github/silkworm/"
+	versions  = [1][2]string{{".", "-"}}
+	content   []byte
+	label     string
+	repo      string
+	version   string
+	bowerbird string
+	filter    Filters
+	jira      Atlassian
+	link      Links
+	post      Post
+	title     Ticket
 )

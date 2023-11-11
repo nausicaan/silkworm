@@ -9,7 +9,7 @@ import (
 // Download the update file produced from Platypus using SCP
 func secopy() {
 	message("Downloading the list of avaiable updates")
-	destination := hmdr + "/updates.txt"
+	destination := hmdr + "/Documents/interactions/updates.txt"
 	execute("-e", "scp", jira.Source, destination)
 }
 

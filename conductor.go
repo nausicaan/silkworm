@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 
@@ -13,6 +12,8 @@ import (
 
 var (
 	hmdr, _ = os.UserHomeDir()
+	satis   strings.Builder
+	managed strings.Builder
 	flag    = os.Args[1]
 )
 
@@ -36,7 +37,7 @@ func serialize() {
 
 // Read updates.txt and take action based on the length of the produced array
 func sifter() {
-	goals := read(hmdr + "/updates.txt")
+	goals := read(hmdr + "/Documents/interactions/updates.txt")
 	updates := strings.Split(string(goals), "\n")
 	if len(updates) == 1 {
 		engine(0, updates)
@@ -46,6 +47,8 @@ func sifter() {
 			engine(i, updates)
 		}
 	}
+	result := managed.String()
+	document(hmdr+"/Documents/interactions/managed.txt", []byte(result))
 }
 
 // Iterate through the updates array and assign plugin and ticket values
@@ -68,10 +71,13 @@ func engine(i int, updates []string) {
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
 			apiget(updates[i])
-			/* TODO Search for the ticket identifier "key":"DESSO-XXXX" value */
 			// addsql("", updates[i])
-			fmt.Println(string(changelog))
-			// fmt.Println(title.Issues[0].Key)
+			joiner := updates[i] + " " + title.Issues[0].Key + " "
+			if strings.Contains(joiner, "bcgov-plugin") {
+				document(hmdr+"/Documents/interactions/premium/"+label+".txt", []byte(joiner))
+			} else {
+				managed.WriteString(joiner)
+			}
 		}
 	}
 }
@@ -88,10 +94,10 @@ func switchboard() {
 		substitution(link.Spotlight, filter.OPH2+"v"+version+filter.ESP)
 	case "wpengine":
 		substitution(link.WordPress+"advanced-custom-fields/#developers", "/Changelog"+filter.CLH2)
-		content = execute("-c", "sed", "1d", hmdr+"/grep.txt")
+		content = execute("-c", "sed", "1d", temp[0])
 	default:
 		substitution(link.WordPress+label+"/#developers", "/Changelog"+filter.CLH2)
-		content = execute("-c", "sed", "1d", hmdr+"/grep.txt")
+		content = execute("-c", "sed", "1d", temp[0])
 	}
 }
 
@@ -114,14 +120,14 @@ func premium(label string) {
 		substitution(link.Poly, filter.OPH4+version+filter.End)
 	case "wp-all-export-pro":
 		substitution(link.WPExport, "/"+version+filter.CLH4)
-		content = execute("-c", "sed", "${/h3./d;}", hmdr+"/grep.txt")
+		content = execute("-c", "sed", "${/h3./d;}", temp[0])
 	}
 }
 
 // Find and replace/delete html tags
 func substitution(link, filter string) {
-	execute("-e", "curl", "-s", link, "-o", hmdr+"/scrape.txt")
-	grep := execute("-c", "sed", "-n", filter, hmdr+"/scrape.txt")
+	execute("-e", "curl", "-s", link, "-o", temp[1])
+	grep := execute("-c", "sed", "-n", filter, temp[1])
 	for _, v := range deletions {
 		replace := bytes.ReplaceAll(grep, []byte(v), []byte(""))
 		grep = replace
@@ -130,16 +136,16 @@ func substitution(link, filter string) {
 		replace := bytes.ReplaceAll(grep, []byte(replacements[i][0]), []byte(replacements[i][1]))
 		grep = replace
 	}
-	document(hmdr+"/grep.txt", grep)
-	content = execute("-c", "sed", "/^$/d ; s/	//g", hmdr+"/grep.txt")
-	document(hmdr+"/grep.txt", content)
+	document(temp[0], grep)
+	content = execute("-c", "sed", "/^$/d ; s/	//g", temp[0])
+	document(temp[0], content)
 }
 
 // Special filter to handle the Events Calendar suite of updates
 func eventfilter() {
-	content = execute("-c", "grep", "-v", "<", hmdr+"/grep.txt")
-	document(hmdr+"/grep.txt", content)
-	content = execute("-c", "sed", "1,3d", hmdr+"/grep.txt")
+	content = execute("-c", "grep", "-v", "<", temp[0])
+	document(temp[0], content)
+	content = execute("-c", "sed", "1,3d", temp[0])
 	content = append([]byte("h3. "+version+"\n"), content...)
 }
 
@@ -151,6 +157,7 @@ func apiget(ticket string) {
 	json.Unmarshal(result, &title)
 }
 
+// Select data from the jira.db database
 func selectsql(query, ticket string) string {
 	db, err := sql.Open("sqlite3", gitpath+"source/jira.db")
 	rows, err := db.Query(query, ticket)
@@ -188,10 +195,4 @@ func addsql(ticket, title string) {
 
 	_, err = stmt.Exec(ticket, title)
 	inspect(err)
-}
-
-func crud() {
-	db, err := sql.Open("sqlite3", gitpath+"source/jira.db")
-	inspect(err)
-	defer db.Close()
 }
