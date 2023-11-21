@@ -50,6 +50,27 @@ func read(file string) []byte {
 	return outcome
 }
 
+// Record a list of files in a folder
+func ls(folder string) []string {
+	var content []string
+	dir := expose(folder)
+
+	files, err := dir.ReadDir(0)
+	inspect(err)
+
+	for _, f := range files {
+		content = append(content, f.Name())
+	}
+	return content
+}
+
+// Open a file for reading and return an os.File variable
+func expose(file string) *os.File {
+	outcome, err := os.Open(file)
+	inspect(err)
+	return outcome
+}
+
 // Provide and highlight informational messages
 func message(message string) {
 	fmt.Println(yellow)

@@ -8,6 +8,7 @@ func main() {
 	} else {
 		switch flag {
 		case "-c", "--create":
+			clearout()
 			message("Creating tickets")
 			serialize()
 			sifter()
@@ -20,7 +21,6 @@ func main() {
 			about()
 		}
 	}
-	// finder(link.WordPress+"wpackagist-plugin/tablepress/#developers", "/Changelog"+filter.CLH2)
 	for _, v := range temp {
 		cleanup(v)
 	}

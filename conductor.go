@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -35,6 +36,13 @@ func serialize() {
 	}
 }
 
+func clearout() {
+	list := ls(hmdr + "/Documents/interactions/premium")
+	for _, file := range list {
+		cleanup(hmdr + "/Documents/interactions/premium/" + file)
+	}
+}
+
 // Read updates.txt and take action based on the length of the produced array
 func sifter() {
 	goals := read(hmdr + "/Documents/interactions/updates.txt")
@@ -48,7 +56,7 @@ func sifter() {
 		}
 	}
 	result := managed.String()
-	document(hmdr+"/Documents/interactions/managed.txt", []byte(result))
+	document(hmdr+"/Documents/interactions/wpackagist.txt", []byte(result))
 }
 
 // Iterate through the updates array and assign plugin and ticket values
@@ -63,6 +71,9 @@ func engine(i int, updates []string) {
 
 			switchboard()
 			changelog := append([]byte(header), content...)
+
+			/* Temporary print to console */
+			fmt.Println(string(changelog))
 
 			/* TODO Create Jira ticket using Description & Summary */
 			post.Issues[0].Fields.Description = string(changelog)

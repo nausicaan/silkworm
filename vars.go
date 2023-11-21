@@ -81,7 +81,7 @@ const (
 
 var (
 	jsons     = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
-	temp      = []string{gitpath + "task/grep.txt", gitpath + "task/scrape.txt"}
+	temp      = []string{gitpath + "temp/grep.txt", gitpath + "temp/scrape.txt"}
 	deletions = []string{
 		"<br />", "</h1>", "</h2>",
 		"</h3>", "</h4>", "</li>",
