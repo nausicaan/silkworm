@@ -8,7 +8,7 @@ func main() {
 	} else {
 		switch flag {
 		case "-c", "--create":
-			clearout()
+			clearout(common + "premium/")
 			message("Creating tickets")
 			serialize()
 			sifter()
@@ -21,7 +21,5 @@ func main() {
 			about()
 		}
 	}
-	for _, v := range temp {
-		cleanup(v)
-	}
+	clearout(common + "temp/")
 }

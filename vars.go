@@ -80,8 +80,8 @@ const (
 )
 
 var (
-	jsons     = []string{gitpath + "jsons/body.json", gitpath + "jsons/filters.json", gitpath + "jsons/links.json", gitpath + "jsons/jira.json"}
-	temp      = []string{gitpath + "temp/grep.txt", gitpath + "temp/scrape.txt"}
+	jsons     = []string{self + "jsons/body.json", self + "jsons/filters.json", self + "jsons/links.json", self + "jsons/jira.json"}
+	temp      = []string{common + "temp/grep.txt", common + "temp/scrape.txt"}
 	deletions = []string{
 		"<br />", "</h1>", "</h2>",
 		"</h3>", "</h4>", "</li>",
@@ -89,9 +89,9 @@ var (
 		"</div>", "<p>", "</p>",
 		"<span>", "<entry>", "</entry>",
 		"</span>", "<footer>", "</footer>",
-		"<header>", "</header>",
+		"<header>", "</header>", "</li class=\"free\">",
 	}
-	replacements = [11][2]string{
+	replacements = [12][2]string{
 		{"<h1>", "h1. "},
 		{"<h2>", "h2. "},
 		{"<h3>", "h3. "},
@@ -103,8 +103,10 @@ var (
 		{"</em>", "*"},
 		{"<code>", "*"},
 		{"</code>", "*"},
+		{"<li class=\"free\">", "- "},
 	}
-	gitpath   = hmdr + "/Documents/github/silkworm/"
+	self      = hmdr + "/Documents/github/silkworm/"
+	common    = hmdr + "/Documents/common/"
 	versions  = [1][2]string{{".", "-"}}
 	content   []byte
 	label     string

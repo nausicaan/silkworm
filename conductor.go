@@ -12,10 +12,10 @@ import (
 )
 
 var (
+	flag    = os.Args[1]
 	hmdr, _ = os.UserHomeDir()
 	satis   strings.Builder
 	managed strings.Builder
-	flag    = os.Args[1]
 )
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
@@ -36,16 +36,16 @@ func serialize() {
 	}
 }
 
-func clearout() {
-	list := ls(hmdr + "/Documents/interactions/premium")
+func clearout(path string) {
+	list := ls(path)
 	for _, file := range list {
-		cleanup(hmdr + "/Documents/interactions/premium/" + file)
+		cleanup(path + file)
 	}
 }
 
 // Read updates.txt and take action based on the length of the produced array
 func sifter() {
-	goals := read(hmdr + "/Documents/interactions/updates.txt")
+	goals := read(common + "updates.txt")
 	updates := strings.Split(string(goals), "\n")
 	if len(updates) == 1 {
 		engine(0, updates)
@@ -56,7 +56,7 @@ func sifter() {
 		}
 	}
 	result := managed.String()
-	document(hmdr+"/Documents/interactions/wpackagist.txt", []byte(result))
+	document(common+"operational/wpackagist.txt", []byte(result))
 }
 
 // Iterate through the updates array and assign plugin and ticket values
@@ -82,10 +82,10 @@ func engine(i int, updates []string) {
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
 			apiget(updates[i])
-			// addsql("", updates[i])
+			// addsql(title.Issues[0].Key, updates[i])
 			joiner := updates[i] + " " + title.Issues[0].Key + " "
 			if strings.Contains(joiner, "bcgov-plugin") {
-				document(hmdr+"/Documents/interactions/premium/"+label+".txt", []byte(joiner))
+				document(common+"premium/"+label+".txt", []byte(joiner))
 			} else {
 				managed.WriteString(joiner)
 			}
@@ -163,14 +163,14 @@ func eventfilter() {
 // Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
 func apiget(ticket string) {
 	/* Test method to aquire data for the result variable */
-	result := read(gitpath + "source/search.json")
+	result := read(self + "source/search.json")
 	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
 	json.Unmarshal(result, &title)
 }
 
 // Select data from the jira.db database
 func selectsql(query, ticket string) string {
-	db, err := sql.Open("sqlite3", gitpath+"source/jira.db")
+	db, err := sql.Open("sqlite3", common+"db/jira.db")
 	rows, err := db.Query(query, ticket)
 	inspect(err)
 	defer rows.Close()
@@ -191,7 +191,7 @@ func selectsql(query, ticket string) string {
 // Add an entry to the jira.db database
 func addsql(ticket, title string) {
 	// Open the database, creating it if it doesn't exist
-	db, err := sql.Open("sqlite3", gitpath+"source/jira.db")
+	db, err := sql.Open("sqlite3", common+"db/jira.db")
 	inspect(err)
 	defer db.Close()
 
