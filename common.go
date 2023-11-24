@@ -9,7 +9,7 @@ import (
 // Download the update file produced from Platypus using SCP
 func secopy() {
 	message("Downloading the list of avaiable updates")
-	destination := hmdr + "/Documents/interactions/updates.txt"
+	destination := hmdr + "/Documents/common/updates.txt"
 	execute("-e", "scp", jira.Source, destination)
 }
 
@@ -73,34 +73,34 @@ func expose(file string) *os.File {
 
 // Provide and highlight informational messages
 func message(message string) {
-	fmt.Println(yellow)
-	fmt.Println("**", reset, message, yellow, "**", reset)
+	fmt.Println()
+	fmt.Println("**", message, "**")
 }
 
 // Print a colourized error message
 func alert(message string) {
-	fmt.Println("\n"+red, message, halt, reset)
+	fmt.Println("\n"+message, halt)
 }
 
 // Display the build version of the program
 func build() {
-	fmt.Println(yellow+"Silkworm", green+bv, reset)
+	fmt.Println("Silkworm", bv)
 }
 
 // Print help information for using the program
 func about() {
-	fmt.Println(yellow, "\nUsage:", reset)
+	fmt.Println("\nUsage:")
 	fmt.Println("  [program] [flag] [vendor/plugin]:[version]")
-	fmt.Println(yellow, "\nExample:", reset)
+	fmt.Println("\nExample:")
 	fmt.Println("  Adding your path to file if necessary, run:")
-	fmt.Println(green + "    silkworm -c wpackagist-plugin/mailpoet:4.6.1")
-	fmt.Println(yellow, "\nAdditional Options:")
-	fmt.Println(green, " -h, --help", reset, "		Help Information")
-	fmt.Println(green, " -v, --version", reset, "	Display App Version")
-	fmt.Println(yellow, "\nHelp:", reset)
+	fmt.Println("    silkworm -c wpackagist-plugin/mailpoet:4.6.1")
+	fmt.Println("\nAdditional Options:")
+	fmt.Println("  -h, --help", "		Help Information")
+	fmt.Println("  -v, --version", "	Display App Version")
+	fmt.Println("\nHelp:")
 	fmt.Println("  For more information go to:")
-	fmt.Println(green, "   https://github.com/nausicaan/silkworm.git")
-	fmt.Println(reset)
+	fmt.Println("    https://github.com/nausicaan/silkworm.git")
+	fmt.Println()
 }
 
 // Remove files or directories

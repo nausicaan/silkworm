@@ -72,10 +72,6 @@ type Post struct {
 const (
 	header string = "h2. Changelog\n\n"
 	bv     string = "2.0"
-	reset  string = "\033[0m"
-	green  string = "\033[32m"
-	yellow string = "\033[33m"
-	red    string = "\033[41m"
 	halt   string = "program halted"
 )
 

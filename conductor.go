@@ -18,6 +18,13 @@ var (
 	managed strings.Builder
 )
 
+func clearout(path string) {
+	list := ls(path)
+	for _, file := range list {
+		cleanup(path + file)
+	}
+}
+
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func serialize() {
 	for index, element := range jsons {
@@ -33,13 +40,6 @@ func serialize() {
 		case 3:
 			json.Unmarshal(data, &jira)
 		}
-	}
-}
-
-func clearout(path string) {
-	list := ls(path)
-	for _, file := range list {
-		cleanup(path + file)
 	}
 }
 
