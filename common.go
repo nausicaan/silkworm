@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-// Download the update file produced from Platypus using SCP
+// Download the update file produced from Platypus using SCP (requires VPN)
 func secopy() {
 	message("Downloading the list of avaiable updates")
 	destination := hmdr + "/Documents/common/updates.txt"
@@ -73,27 +73,26 @@ func expose(file string) *os.File {
 
 // Provide and highlight informational messages
 func message(message string) {
-	fmt.Println()
-	fmt.Println("**", message, "**")
+	fmt.Println("\n**", message, "**")
 }
 
 // Print a colourized error message
 func alert(message string) {
-	fmt.Println("\n"+message, halt)
+	fmt.Printf("\n%s %s\n", message, halt)
 }
 
 // Display the build version of the program
 func build() {
-	fmt.Println("Silkworm", bv)
+	fmt.Println("\nSilkworm", bv)
 }
 
 // Print help information for using the program
 func about() {
 	fmt.Println("\nUsage:")
-	fmt.Println("  [program] [flag] [vendor/plugin]:[version]")
+	fmt.Println("  [program] [flag]")
 	fmt.Println("\nExample:")
 	fmt.Println("  Adding your path to file if necessary, run:")
-	fmt.Println("    silkworm -c wpackagist-plugin/mailpoet:4.6.1")
+	fmt.Println("    silkworm -c")
 	fmt.Println("\nAdditional Options:")
 	fmt.Println("  -h, --help", "		Help Information")
 	fmt.Println("  -v, --version", "	Display App Version")

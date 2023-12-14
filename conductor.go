@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	flag    = os.Args[1]
+	flag    = os.Args
 	hmdr, _ = os.UserHomeDir()
 	satis   strings.Builder
 	managed strings.Builder
@@ -76,14 +76,17 @@ func engine(i int, updates []string) {
 			fmt.Println(string(changelog))
 
 			/* TODO Create Jira ticket using Description & Summary */
-			post.Issues[0].Fields.Description = string(changelog)
-			post.Issues[0].Fields.Summary = updates[i]
+			post.Fields.Description = string(changelog)
+			post.Fields.Summary = updates[i]
 			// body, _ := json.Marshal(post)
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
 			apiget(updates[i])
-			// addsql(title.Issues[0].Key, updates[i])
-			joiner := updates[i] + " " + title.Issues[0].Key + " "
+			// addsql(title.Key, updates[i])
+
+			/* STILL RELEVANT CODE?? */
+			joiner := updates[i] + " " + title.Key + " "
+
 			if strings.Contains(joiner, "bcgov-plugin") {
 				document(common+"premium/"+label+".txt", []byte(joiner))
 			} else {
@@ -163,7 +166,7 @@ func eventfilter() {
 // Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
 func apiget(ticket string) {
 	/* Test method to aquire data for the result variable */
-	result := read(self + "source/search.json")
+	result := read(common + "db/single.json")
 	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
 	json.Unmarshal(result, &title)
 }

@@ -35,47 +35,55 @@ type Filters struct {
 	Event string `json:"event"`
 }
 
-// Ticket holds the value of the DESSO-XXXX identifier
-type Ticket struct {
-	Issues []struct {
-		Key string `json:"key"`
-	} `json:"issues"`
+// Desso holds the value of the DESSO-XXXX identifier
+type Desso struct {
+	Key string `json:"key"`
 }
 
 // Post contains the JSON parameters for a new Jira ticket
 type Post struct {
-	Issues []struct {
-		Fields struct {
-			Assignee struct {
-				Key string `json:"key"`
-			} `json:"assignee"`
-			Issuetype struct {
-				ID string `json:"id"`
-			} `json:"issuetype"`
-			Creator struct {
-				Key string `json:"key"`
-			} `json:"creator"`
-			Labels   []string `json:"labels"`
-			Reporter struct {
-				Key string `json:"key"`
-			} `json:"reporter"`
-			Project struct {
-				ID  string `json:"id"`
-				Key string `json:"key"`
-			} `json:"project"`
-			Description string `json:"description"`
-			Summary     string `json:"summary"`
-		} `json:"fields"`
-	} `json:"issues"`
+	Fields struct {
+		Assignee struct {
+			Key string `json:"key"`
+		} `json:"assignee"`
+		Issuetype struct {
+			ID string `json:"id"`
+		} `json:"issuetype"`
+		Creator struct {
+			Key string `json:"key"`
+		} `json:"creator"`
+		Labels   []string `json:"labels"`
+		Reporter struct {
+			Key string `json:"key"`
+		} `json:"reporter"`
+		Project struct {
+			ID  string `json:"id"`
+			Key string `json:"key"`
+		} `json:"project"`
+		Description string `json:"description"`
+		Summary     string `json:"summary"`
+	} `json:"fields"`
 }
 
 const (
-	header string = "h2. Changelog\n\n"
+	header string = "\nh2. Changelog\n"
 	bv     string = "2.0"
 	halt   string = "program halted"
 )
 
 var (
+	content   []byte
+	label     string
+	repo      string
+	version   string
+	filter    Filters
+	jira      Atlassian
+	link      Links
+	post      Post
+	title     Desso
+	versions  = [1][2]string{{".", "-"}}
+	common    = hmdr + "/Documents/common/"
+	self      = hmdr + "/Documents/github/silkworm/"
 	jsons     = []string{self + "jsons/body.json", self + "jsons/filters.json", self + "jsons/links.json", self + "jsons/jira.json"}
 	temp      = []string{common + "temp/grep.txt", common + "temp/scrape.txt"}
 	deletions = []string{
@@ -101,17 +109,4 @@ var (
 		{"</code>", "*"},
 		{"<li class=\"free\">", "- "},
 	}
-	self      = hmdr + "/Documents/github/silkworm/"
-	common    = hmdr + "/Documents/common/"
-	versions  = [1][2]string{{".", "-"}}
-	content   []byte
-	label     string
-	repo      string
-	version   string
-	bowerbird string
-	filter    Filters
-	jira      Atlassian
-	link      Links
-	post      Post
-	title     Ticket
 )
