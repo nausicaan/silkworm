@@ -55,8 +55,6 @@ func sifter() {
 			engine(i, updates)
 		}
 	}
-	result := managed.String()
-	document(common+"operational/wpackagist.txt", []byte(result))
 }
 
 // Iterate through the updates array and assign plugin and ticket values
@@ -75,25 +73,24 @@ func engine(i int, updates []string) {
 			/* Temporary print to console */
 			fmt.Println(string(changelog))
 
-			/* TODO Create Jira ticket using Description & Summary */
+			/* Create Jira ticket using Description & Summary */
 			post.Fields.Description = string(changelog)
 			post.Fields.Summary = updates[i]
 			// body, _ := json.Marshal(post)
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
 			apiget(updates[i])
-			// addsql(title.Key, updates[i])
-
-			/* STILL RELEVANT CODE?? */
-			joiner := updates[i] + " " + title.Key + " "
-
-			if strings.Contains(joiner, "bcgov-plugin") {
-				document(common+"premium/"+label+".txt", []byte(joiner))
-			} else {
-				managed.WriteString(joiner)
-			}
+			addsql(title.Key, updates[i])
 		}
 	}
+}
+
+// Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
+func apiget(ticket string) {
+	/* Test method to aquire data for the result variable */
+	result := read(common + "db/single.json")
+	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
+	json.Unmarshal(result, &title)
 }
 
 // Sort the query based on repository name
@@ -161,14 +158,6 @@ func eventfilter() {
 	document(temp[0], content)
 	content = execute("-c", "sed", "1,3d", temp[0])
 	content = append([]byte("h3. "+version+"\n"), content...)
-}
-
-// Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
-func apiget(ticket string) {
-	/* Test method to aquire data for the result variable */
-	result := read(common + "db/single.json")
-	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
-	json.Unmarshal(result, &title)
 }
 
 // Select data from the jira.db database

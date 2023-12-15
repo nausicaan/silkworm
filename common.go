@@ -92,7 +92,7 @@ func about() {
 	fmt.Println("  [program] [flag]")
 	fmt.Println("\nExample:")
 	fmt.Println("  Adding your path to file if necessary, run:")
-	fmt.Println("    silkworm -c")
+	fmt.Println("    silkworm")
 	fmt.Println("\nAdditional Options:")
 	fmt.Println("  -h, --help", "		Help Information")
 	fmt.Println("  -v, --version", "	Display App Version")

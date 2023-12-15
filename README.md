@@ -21,13 +21,13 @@ A `jira.json` file containing your API URL and Bearer token to enable ticket cre
 
 From the root folder the `go` files, use the command that matches your environment:
 
-### Windows & Mac:
+### Windows & Mac
 
 ``` console
 go build -o [name] .
 ```
 
-### Linux:
+### Linux
 
 ``` console
 GOOS=linux GOARCH=amd64 go build -o [name] .
@@ -36,13 +36,32 @@ GOOS=linux GOARCH=amd64 go build -o [name] .
 ## Run
 
 ``` console
-[program] [flag]
+[program] [optional flag]
 ```
 
 Example:
 
 ``` console
-silkworm -c
+silkworm -h
+```
+
+Output:
+
+``` console
+Usage:
+  [program] [flag]
+
+Example:
+  Adding your path to file if necessary, run:
+    silkworm
+
+Additional Options:
+  -h, --help 		Help Information
+  -v, --version 	Display App Version
+
+Help:
+  For more information go to:
+    https://github.com/nausicaan/silkworm.git
 ```
 
 ## License
