@@ -18,6 +18,7 @@ var (
 	managed strings.Builder
 )
 
+// Empty the contents a folder
 func clearout(path string) {
 	list := ls(path)
 	for _, file := range list {
@@ -80,7 +81,7 @@ func engine(i int, updates []string) {
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
 			apiget(updates[i])
-			addsql(title.Key, updates[i])
+			// addsql(title.Key, updates[i])
 		}
 	}
 }
@@ -192,7 +193,7 @@ func addsql(ticket, title string) {
 	inspect(err)
 
 	// Insert a new entry
-	stmt, err := db.Prepare("INSERT INTO tickets(ticket, title) VALUES(?, ?)")
+	stmt, err := db.Prepare("INSERT INTO tickets(desso, title) VALUES(?, ?)")
 	inspect(err)
 	defer stmt.Close()
 

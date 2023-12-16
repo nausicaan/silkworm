@@ -37,6 +37,11 @@ type Filters struct {
 
 // Desso holds the value of the DESSO-XXXX identifier
 type Desso struct {
+	Issues []Issue `json:"issues"`
+}
+
+// Issue is a sub-structure of Desso
+type Issue struct {
 	Key string `json:"key"`
 }
 
