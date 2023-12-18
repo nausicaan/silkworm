@@ -89,7 +89,7 @@ func engine(i int, updates []string) {
 // Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
 func apiget(ticket string) {
 	/* Test method to aquire data for the result variable */
-	result := read(common + "db/single.json")
+	result := read(common + "jsons/single.json")
 	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
 	json.Unmarshal(result, &title)
 }
@@ -163,7 +163,7 @@ func eventfilter() {
 
 // Select data from the jira.db database
 func selectsql(query, ticket string) string {
-	db, err := sql.Open("sqlite3", common+"db/jira.db")
+	db, err := sql.Open("sqlite3", common+"jira.db")
 	rows, err := db.Query(query, ticket)
 	inspect(err)
 	defer rows.Close()
@@ -184,7 +184,7 @@ func selectsql(query, ticket string) string {
 // Add an entry to the jira.db database
 func addsql(ticket, title string) {
 	// Open the database, creating it if it doesn't exist
-	db, err := sql.Open("sqlite3", common+"db/jira.db")
+	db, err := sql.Open("sqlite3", common+"jira.db")
 	inspect(err)
 	defer db.Close()
 
