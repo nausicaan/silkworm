@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
-// Download the update file produced from Platypus using SCP (requires VPN)
-func secopy() {
-	message("Downloading the list of avaiable updates")
-	destination := common + "updates.txt"
-	execute("-e", "scp", jira.Source, destination)
-}
+var (
+	flag    = os.Args
+	satis   strings.Builder
+	managed strings.Builder
+)
 
 // Write a passed variable to a named file
 func document(name string, d []byte) {

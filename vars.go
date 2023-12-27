@@ -71,9 +71,9 @@ type Post struct {
 }
 
 const (
-	header string = "\nh2. Changelog\n"
 	bv     string = "2.0"
 	halt   string = "program halted"
+	header string = "\nh2. Changelog\n"
 )
 
 var (
@@ -81,16 +81,15 @@ var (
 	label     string
 	repo      string
 	version   string
-	filter    Filters
-	jira      Atlassian
 	link      Links
 	post      Post
 	title     Desso
+	filter    Filters
+	jira      Atlassian
 	versions  = [1][2]string{{".", "-"}}
-	common    = hmdr + "/Documents/common/"
-	self      = hmdr + "/Documents/github/silkworm/"
-	jsons     = []string{self + "jsons/body.json", self + "jsons/filters.json", self + "jsons/links.json", self + "jsons/jira.json"}
-	temp      = []string{common + "temp/grep.txt", common + "temp/scrape.txt"}
+	root      = "/data/scripts/go-programs/"
+	jsons     = []string{root + "jsons/body.json", root + "jsons/filters.json", root + "jsons/links.json", root + "jsons/jira.json"}
+	temp      = []string{root + "temp/grep.txt", root + "temp/scrape.txt"}
 	deletions = []string{
 		"<br />", "</h1>", "</h2>",
 		"</h3>", "</h4>", "</li>",

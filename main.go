@@ -13,7 +13,7 @@ func main() {
 			about()
 		}
 	} else {
-		clearout(common + "temp/")
+		clearout(root + "temp/")
 		message("Creating tickets")
 		serialize()
 		sifter()

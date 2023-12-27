@@ -4,18 +4,9 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"fmt"
-	"os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
-)
-
-var (
-	flag    = os.Args
-	hmdr, _ = os.UserHomeDir()
-	satis   strings.Builder
-	managed strings.Builder
 )
 
 // Empty the contents a folder
@@ -29,8 +20,9 @@ func clearout(path string) {
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func serialize() {
 	for index, element := range jsons {
-		data, err := os.ReadFile(element)
-		inspect(err)
+		// data, err := os.ReadFile(element)
+		// inspect(err)
+		data := read(element)
 		switch index {
 		case 0:
 			json.Unmarshal(data, &post)
@@ -46,7 +38,7 @@ func serialize() {
 
 // Read updates.txt and take action based on the length of the produced array
 func sifter() {
-	goals := read(common + "updates.txt")
+	goals := read("updates/updates.txt")
 	updates := strings.Split(string(goals), "\n")
 	if len(updates) == 1 {
 		engine(0, updates)
@@ -72,25 +64,23 @@ func engine(i int, updates []string) {
 			changelog := append([]byte(header), content...)
 
 			/* Temporary print to console */
-			fmt.Println(string(changelog))
+			// fmt.Println(string(changelog))
 
 			/* Create Jira ticket using Description & Summary */
 			post.Fields.Description = string(changelog)
 			post.Fields.Summary = updates[i]
-			// body, _ := json.Marshal(post)
-			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
+			body, _ := json.Marshal(post)
+			execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "\"Authorization: Bearer "+jira.Token+"\"", jira.Base+"issue/")
 
 			apiget(updates[i])
-			// addsql(title.Key, updates[i])
+			addsql(title.Issues[0].Key, updates[i])
 		}
 	}
 }
 
 // Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
 func apiget(ticket string) {
-	/* Test method to aquire data for the result variable */
-	result := read(common + "jsons/single.json")
-	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
+	result := execute("-c", "curl", "-X", "GET", "-H", "\"Authorization: Bearer "+jira.Token+"\"", jira.Base+"search?jql=summary~%27"+ticket+"%27")
 	json.Unmarshal(result, &title)
 }
 
@@ -163,7 +153,7 @@ func eventfilter() {
 
 // Select data from the jira.db database
 func selectsql(query, ticket string) string {
-	db, err := sql.Open("sqlite3", common+"jira.db")
+	db, err := sql.Open("sqlite3", root+"jira.db")
 	rows, err := db.Query(query, ticket)
 	inspect(err)
 	defer rows.Close()
@@ -184,7 +174,7 @@ func selectsql(query, ticket string) string {
 // Add an entry to the jira.db database
 func addsql(ticket, title string) {
 	// Open the database, creating it if it doesn't exist
-	db, err := sql.Open("sqlite3", common+"jira.db")
+	db, err := sql.Open("sqlite3", root+"jira.db")
 	inspect(err)
 	defer db.Close()
 
