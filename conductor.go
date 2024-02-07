@@ -61,7 +61,7 @@ func sifter() {
 // Iterate through the updates array and assign plugin and ticket values
 func engine(i int, updates []string) {
 	if len(updates[i]) > 25 {
-		if selectsql("SELECT title FROM tickets WHERE title = ?", updates[i]) != updates[i] {
+		if selectsql("SELECT title FROM ignored WHERE title = ?", updates[i]) != updates[i] {
 			firstsplit := strings.Split(updates[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
@@ -189,11 +189,11 @@ func addsql(ticket, title string) {
 	defer db.Close()
 
 	// Create a table if it doesn't exist
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS ignored (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
 	inspect(err)
 
 	// Insert a new entry
-	stmt, err := db.Prepare("INSERT INTO tickets(desso, title) VALUES(?, ?)")
+	stmt, err := db.Prepare("INSERT INTO completed (desso, title) VALUES(?, ?)")
 	inspect(err)
 	defer stmt.Close()
 

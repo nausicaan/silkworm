@@ -22,11 +22,9 @@ type Atlassian struct {
 
 // Filters builds the parameters for sed to execute on the scrapped.txt file
 type Filters struct {
-	OPH1  string `json:"oph1"`
 	OPH2  string `json:"oph2"`
 	OPH3  string `json:"oph3"`
 	OPH4  string `json:"oph4"`
-	CLH1  string `json:"clh1"`
 	CLH2  string `json:"clh2"`
 	CLH3  string `json:"clh3"`
 	CLH4  string `json:"clh4"`
@@ -98,7 +96,7 @@ var (
 		"</div>", "<p>", "</p>",
 		"<span>", "<entry>", "</entry>",
 		"</span>", "<footer>", "</footer>",
-		"<header>", "</header>", "</li class=\"free\">",
+		"<header>", "</header>",
 	}
 	replacements = [12][2]string{
 		{"<h1>", "h1. "},
