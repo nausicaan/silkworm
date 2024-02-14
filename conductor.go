@@ -80,8 +80,8 @@ func engine(i int, updates []string) {
 			// body, _ := json.Marshal(post)
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
-			apiget(updates[i])
-			// addsql(title.Key, updates[i])
+			// apiget(updates[i])
+			// addsql(title.Issues[0].Key, updates[i])
 		}
 	}
 }
@@ -189,7 +189,7 @@ func addsql(ticket, title string) {
 	defer db.Close()
 
 	// Create a table if it doesn't exist
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS ignored (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS completed (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
 	inspect(err)
 
 	// Insert a new entry
