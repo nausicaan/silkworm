@@ -2,16 +2,8 @@ package main
 
 // Launch the program and execute according to the supplied flag
 func main() {
-	if len(flag) < 1 {
-		alert("No arguments detected -")
-		about()
-	} else {
-		switch flag {
-		case "-c", "--create":
-			clearout(common + "premium/")
-			message("Creating tickets")
-			serialize()
-			sifter()
+	if len(flag) == 2 {
+		switch flag[1] {
 		case "-h", "--help":
 			about()
 		case "-v", "--version":
@@ -20,6 +12,10 @@ func main() {
 			alert("Unknown argument(s) supplied -")
 			about()
 		}
+	} else {
+		clearout(common + "temp/")
+		message("Creating tickets")
+		serialize()
+		sifter()
 	}
-	clearout(common + "temp/")
 }

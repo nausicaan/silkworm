@@ -12,11 +12,19 @@ import (
 )
 
 var (
-	flag    = os.Args[1]
+	flag    = os.Args
 	hmdr, _ = os.UserHomeDir()
 	satis   strings.Builder
 	managed strings.Builder
 )
+
+// Empty the contents a folder
+func clearout(path string) {
+	list := ls(path)
+	for _, file := range list {
+		cleanup(path + file)
+	}
+}
 
 // Read the JSON files and Unmarshal the data into the appropriate Go structure
 func serialize() {
@@ -36,13 +44,6 @@ func serialize() {
 	}
 }
 
-func clearout(path string) {
-	list := ls(path)
-	for _, file := range list {
-		cleanup(path + file)
-	}
-}
-
 // Read updates.txt and take action based on the length of the produced array
 func sifter() {
 	goals := read(common + "updates.txt")
@@ -55,14 +56,12 @@ func sifter() {
 			engine(i, updates)
 		}
 	}
-	result := managed.String()
-	document(common+"operational/wpackagist.txt", []byte(result))
 }
 
 // Iterate through the updates array and assign plugin and ticket values
 func engine(i int, updates []string) {
 	if len(updates[i]) > 25 {
-		if selectsql("SELECT title FROM tickets WHERE title = ?", updates[i]) != updates[i] {
+		if selectsql("SELECT title FROM ignored WHERE title = ?", updates[i]) != updates[i] {
 			firstsplit := strings.Split(updates[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
@@ -75,22 +74,24 @@ func engine(i int, updates []string) {
 			/* Temporary print to console */
 			fmt.Println(string(changelog))
 
-			/* TODO Create Jira ticket using Description & Summary */
-			post.Issues[0].Fields.Description = string(changelog)
-			post.Issues[0].Fields.Summary = updates[i]
+			/* Create Jira ticket using Description & Summary */
+			post.Fields.Description = string(changelog)
+			post.Fields.Summary = updates[i]
 			// body, _ := json.Marshal(post)
 			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
-			apiget(updates[i])
+			// apiget(updates[i])
 			// addsql(title.Issues[0].Key, updates[i])
-			joiner := updates[i] + " " + title.Issues[0].Key + " "
-			if strings.Contains(joiner, "bcgov-plugin") {
-				document(common+"premium/"+label+".txt", []byte(joiner))
-			} else {
-				managed.WriteString(joiner)
-			}
 		}
 	}
+}
+
+// Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
+func apiget(ticket string) {
+	/* Test method to aquire data for the result variable */
+	result := read(common + "jsons/single.json")
+	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
+	json.Unmarshal(result, &title)
 }
 
 // Sort the query based on repository name
@@ -160,17 +161,9 @@ func eventfilter() {
 	content = append([]byte("h3. "+version+"\n"), content...)
 }
 
-// Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
-func apiget(ticket string) {
-	/* Test method to aquire data for the result variable */
-	result := read(self + "source/search.json")
-	// result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
-	json.Unmarshal(result, &title)
-}
-
 // Select data from the jira.db database
 func selectsql(query, ticket string) string {
-	db, err := sql.Open("sqlite3", common+"db/jira.db")
+	db, err := sql.Open("sqlite3", common+"jira.db")
 	rows, err := db.Query(query, ticket)
 	inspect(err)
 	defer rows.Close()
@@ -191,16 +184,16 @@ func selectsql(query, ticket string) string {
 // Add an entry to the jira.db database
 func addsql(ticket, title string) {
 	// Open the database, creating it if it doesn't exist
-	db, err := sql.Open("sqlite3", common+"db/jira.db")
+	db, err := sql.Open("sqlite3", common+"jira.db")
 	inspect(err)
 	defer db.Close()
 
 	// Create a table if it doesn't exist
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS completed (id INTEGER PRIMARY KEY AUTOINCREMENT, ticket TEXT NOT NULL UNIQUE, title TEXT NOT NULL)`)
 	inspect(err)
 
 	// Insert a new entry
-	stmt, err := db.Prepare("INSERT INTO tickets(ticket, title) VALUES(?, ?)")
+	stmt, err := db.Prepare("INSERT INTO completed (desso, title) VALUES(?, ?)")
 	inspect(err)
 	defer stmt.Close()
 
