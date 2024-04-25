@@ -86,7 +86,7 @@ var (
 	title     Desso
 	versions  = [1][2]string{{".", "-"}}
 	common    = hmdr + "/Documents/common/"
-	self      = hmdr + "/Documents/github/silkworm/"
+	self      = hmdr + "/Github/silkworm/"
 	jsons     = []string{self + "jsons/body.json", self + "jsons/filters.json", self + "jsons/links.json", self + "jsons/jira.json"}
 	temp      = []string{common + "temp/grep.txt", common + "temp/scrape.txt"}
 	deletions = []string{
