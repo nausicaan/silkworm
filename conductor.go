@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -60,7 +61,7 @@ func sifter() {
 // Iterate through the updates array and assign plugin and ticket values
 func engine(i int, updates []string) {
 	if len(updates[i]) > 25 {
-		if selectsql("SELECT title FROM ignored WHERE title = ?", updates[i]) != updates[i] {
+		if selectsql("SELECT title FROM completed WHERE title = ?", updates[i]) != updates[i] {
 			firstsplit := strings.Split(updates[i], "/")
 			repo = firstsplit[0]
 			secondsplit := strings.Split(firstsplit[1], ":")
@@ -71,25 +72,22 @@ func engine(i int, updates []string) {
 			changelog := append([]byte(header), content...)
 
 			/* Temporary print to console */
-			// fmt.Println(string(changelog))
+			fmt.Println(string(changelog))
 
 			/* Create Jira ticket using Description & Summary */
 			post.Fields.Description = string(changelog)
 			post.Fields.Summary = updates[i]
-			body, _ := json.Marshal(post)
-			execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
+			// body, _ := json.Marshal(post)
+			// execute("-e", "curl", "-D-", "-X", "POST", "-d", string(body), "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"issue/")
 
-			apiget(updates[i])
-			addsql(title.Issues[0].Key, updates[i])
+			// apiget(updates[i])
+			// addsql(title.Issues[0].Key, updates[i])
 		}
 	}
 }
 
 // Grab the ticket information from Jira in order to extract the DESSO-XXXX identifier
 func apiget(ticket string) {
-	/* Workaround to aquire data for the result variable for local testing */
-	// result := read(common + "jsons/single.json")
-
 	/* Actual command for quering the Jira API */
 	result := execute("-c", "curl", "-X", "GET", "-H", "Authorization: Bearer "+jira.Token, "-H", "Content-Type: application/json", jira.Base+"search?jql=summary~%27"+ticket+"%27")
 	json.Unmarshal(result, &title)
